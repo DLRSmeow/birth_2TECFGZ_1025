@@ -152,38 +152,7 @@
             text-align: center;
             max-width: 300px;
         }
-	.avatar-corner {
-    position: absolute;
-    width: 50px;   /* 变小 */
-    height: 50px;  /* 变小 */
-    border-radius: 50%;
-    border: 2px solid rgba(120, 200, 255, 0.6);
-    background-size: cover;
-    background-position: center;
-    z-index: 15;
-    
-    /* 🎇 呼吸效果 */
-    animation: breathe 3s ease-in-out infinite alternate;
-    box-shadow: 
-        0 0 10px rgba(100, 180, 255, 0.5),
-        inset 0 0 5px rgba(255, 255, 255, 0.3);
-}
-
-/* 呼吸动画 */
-@keyframes breathe {
-    0% {
-        transform: scale(1);
-        box-shadow: 0 0 10px rgba(100, 180, 255, 0.5);
-        border-color: rgba(120, 200, 255, 0.6);
-    }
-    100% {
-        transform: scale(1.1);
-        box-shadow: 0 0 20px rgba(100, 200, 255, 0.8);
-        border-color: rgba(160, 220, 255, 0.9);
-    }
-}
-
-/* 四角定位 */
+	/* 四角定位 */
 .avatar-tl { top: 10px; left: 10px; }
 .avatar-tr { top: 10px; right: 10px; }
 .avatar-bl { bottom: 10px; left: 10px; }
@@ -232,11 +201,7 @@
     <!-- 蛋糕 -->
 <div class="cake-frame">
     <!-- 四角头像 -->
-        <div class="avatar-corner avatar-tl" style="background-image: url('https://github.com/DLRSmeow/photos/blob/main/sanhua.jpg?raw=true'); background-size: cover; border: 3px solid red;"></div>
-    <div class="avatar-corner avatar-tr" style="background-image: url('https://github.com/DLRSmeow/photos/blob/main/meow.png?raw=true'); background-size: cover; border: 3px solid blue;"></div>
-    <div class="avatar-corner avatar-bl" style="background-image: url('https://github.com/DLRSmeow/photos/blob/main/cai.png?raw=true'); background-size: cover; border: 3px solid green;"></div>
-    <div class="avatar-corner avatar-br" style="background-image: url('https://github.com/DLRSmeow/photos/blob/main/bunny.jpg?raw=true'); background-size: cover; border: 3px solid yellow;"></div>
-    
+            
         <!-- 蛋糕容器 -->
     <div class="cake-container" onclick="cutCake()">
         <div class="cake-base" id="cakeBase">
@@ -309,35 +274,8 @@
                 content: '祝福语3'
             }
         ];
-	// 四位网友的头像链接
-	const avatarUrls = [
-    'https://files.catbox.moe/dmqecw.png',
-    'https://files.catbox.moe/h0acri.jpg', 
-    'https://files.catbox.moe/01s16i.jpg',
-    'https://files.catbox.moe/zsl4um.png'
-];
 
-	// 页面加载时固定分配头像
-window.onload = function() {
-    document.querySelector('.avatar-tl').innerHTML = 
-        `< img src="${avatarUrls[0]}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-    document.querySelector('.avatar-tr').innerHTML = 
-        `< img src="${avatarUrls[1]}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-    document.querySelector('.avatar-bl').innerHTML = 
-        `< img src="${avatarUrls[2]}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-    document.querySelector('.avatar-br').innerHTML = 
-        `< img src="${avatarUrls[3]}" style="width:100%; height:100%; border-radius:50%; object-fit:cover;">`;
-    
-    // 可选：错落淡入效果
-    const avatars = document.querySelectorAll('.avatar-corner');
-    avatars.forEach((avatar, index) => {
-        avatar.style.opacity = '0';
-        setTimeout(() => {
-            avatar.style.opacity = '1';
-            avatar.style.transition = 'opacity 0.8s ease';
-        }, index * 400);
-    });
-};
+	let currentMemoryIndex = 0; 
         // 切蛋糕函数
         function cutCake() {
             const cakeBase = document.getElementById('cakeBase');
@@ -350,21 +288,20 @@ window.onload = function() {
             cakeBase.style.opacity = '0.7';
             cakeTop.style.transform = 'translateY(-10px)';
             
-            // 随机选择回忆
-            const randomMemory = memories[Math.floor(Math.random() * memories.length)];
+            // 顺序显示回忆
+            const memory = memories[currentMemoryIndex];
             
             // 根据类型显示内容
-            if (randomMemory.type === 'text') {
-                memoryContent.innerHTML = `<div class="memory-text">${randomMemory.content}</div>`;
-            } else if (randomMemory.type === 'image') {
-                memoryContent.innerHTML = `<img src="${randomMemory.content}" alt="我们的回忆" class="memory-image">`;
+            if (memory.type === 'text') {
+                memoryContent.innerHTML = `<div class="memory-text">${memory.content}</div>`;
+            } else if (memory.type === 'image') {
+                memoryContent.innerHTML = `<img src="${memory.content}" alt="我们的回忆" class="memory-image">`;
             }
             
             // 显示弹窗
             memoryPopup.style.display = 'block';
 
-         //   placeRandomAvatars();
-
+            currentMemoryIndex = (currentMemoryIndex + 1) % memories.length;
                  }
 
         // 关闭弹窗
